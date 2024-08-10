@@ -5,4 +5,4 @@ from rest_framework import serializers
 class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
-        fields = ["title", "body", "tags", "source"]
+        fields = ("__all__")

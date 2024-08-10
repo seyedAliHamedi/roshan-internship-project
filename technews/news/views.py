@@ -31,11 +31,13 @@ class DeleteNewsView(generics.DestroyAPIView):
 
 class GetNewsByTagsView(generics.ListAPIView):
     serializer_class = NewsSerializer
+    queryset = News.objects.all()
 
     def get_queryset(self):
         queryset = super().get_queryset()
         tags = self.request.query_params.get('tags', None)
         if tags:
             tags_list = tags.split(',')
-            queryset = queryset.filter(tags__overlap=tags_list)
-        return queryset
+            for tag in tags_list:
+                queryset = queryset.filter(tags__icontains=tag)
+            return queryset
