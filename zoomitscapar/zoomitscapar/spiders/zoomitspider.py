@@ -15,7 +15,7 @@ class ZoomitSpider(scrapy.Spider):
     def parse_article_sitemap(self, response):
         article_urls = response.xpath(
             '//s:url/s:loc/text()', namespaces={'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}).getall()
-        for url in article_urls:
+        for url in article_urls[0:10]:
             yield scrapy.Request(url, callback=self.parse_article)
 
     def parse_article(self, response):
