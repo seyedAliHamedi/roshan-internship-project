@@ -16,9 +16,12 @@ def fetch_and_store_news():
 
     subprocess.run(command, cwd=spider_path)
 
-    news_items = None
     with open(os.path.join(spider_path, 'result.json'), 'r', encoding='utf-8') as f:
-        news_items = json.load(f)
+        content = f.read()
+        try:
+            news_items = json.loads(content)
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
 
     for item in news_items:
         title = item.get('title')

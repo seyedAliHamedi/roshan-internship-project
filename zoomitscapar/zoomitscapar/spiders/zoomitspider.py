@@ -8,14 +8,14 @@ class ZoomitSpider(scrapy.Spider):
     def parse(self, response):
         sitemap_urls = response.xpath(
             '//s:sitemap/s:loc/text()', namespaces={'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}).getall()
-        for url in sitemap_urls:
+        for url in sitemap_urls[0:5]:
             if 'article' in url:
                 yield scrapy.Request(url, callback=self.parse_article_sitemap)
 
     def parse_article_sitemap(self, response):
         article_urls = response.xpath(
             '//s:url/s:loc/text()', namespaces={'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}).getall()
-        for url in article_urls[0:10]:
+        for url in article_urls[0:5]:
             yield scrapy.Request(url, callback=self.parse_article)
 
     def parse_article(self, response):
