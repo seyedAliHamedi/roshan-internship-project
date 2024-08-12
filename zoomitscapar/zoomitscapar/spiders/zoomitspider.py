@@ -19,16 +19,17 @@ class ZoomitSpider(scrapy.Spider):
             yield scrapy.Request(url, callback=self.parse_article)
 
     def parse_article(self, response):
+        title = response.xpath(
+            '//h1[@class="typography__StyledDynamicTypographyComponent-t787b7-0 fzMmhL"]/text()').get()
 
-        title = response.xpath('//h1[contains(@class, "title")]/text()').get()
         description = response.xpath(
             '//meta[@name="description"]/@content').get()
-
-        if not title:
-            title = response.xpath('//title/text()').get()
+        categories = response.xpath(
+            '//div[@class="flex__Flex-le1v16-0 kDyGrB"]/a/span[@class="typography__StyledDynamicTypographyComponent-t787b7-0 cHbulB"]/text()').getall()
 
         yield {
             'url': response.url,
             'title': title.strip() if title else None,
             'description': description.strip() if description else None,
+            'categories': [cat.strip() for cat in categories] if categories else None
         }
