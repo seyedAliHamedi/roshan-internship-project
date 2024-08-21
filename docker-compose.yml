@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:13
@@ -24,9 +22,9 @@ services:
       - db
       - redis
 
-  celery:
+  celery-worker:
     build: .
-    command: celery -A technews worker --loglevel=info
+    command: celery -A technews worker
     volumes:
       - .:/app
     depends_on:
@@ -35,7 +33,7 @@ services:
 
   celery-beat:
     build: .
-    command: celery -A technews beat --loglevel=info
+    command: celery -A technews beat
     volumes:
       - .:/app
     depends_on:
@@ -43,13 +41,13 @@ services:
       - db
 
   flower:
-    image: mher/flower:1.1.0
+    image: mher/flower:1.2.0
     command: flower --broker=redis://redis:6379/0
     ports:
       - "5555:5555"
     depends_on:
       - redis
-      - celery
+      - celery-worker
 
 volumes:
   postgres_data:

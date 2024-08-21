@@ -31,5 +31,5 @@ class ZoomitSpider(scrapy.Spider):
             'url': response.url,
             'title': title.strip() if title else None,
             'description': description.strip() if description else None,
-            'categories': [cat.strip() for cat in categories] if categories else None
+            'tags': [cat.strip() for cat in categories] if categories else None
         }

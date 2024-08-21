@@ -1,0 +1,8 @@
+scrapy
+django
+redis
+celery
+djangorestframework
+django_celery_beat
+psycopg2-binary
+gunicorn

@@ -2,13 +2,12 @@ from celery import shared_task
 import subprocess
 import os
 import json
-from .models import News
+from .models import News, Tag
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 
 
 @shared_task
 def fetch_and_store_news():
-    print("HHHHHHHHHH")
     spider_path = os.path.join(
         os.path.dirname(__file__), '../../zoomitscapar')
 
@@ -16,6 +15,7 @@ def fetch_and_store_news():
 
     subprocess.run(command, cwd=spider_path)
 
+    news_items = []
     with open(os.path.join(spider_path, 'result.json'), 'r', encoding='utf-8') as f:
         content = f.read()
         try:
@@ -26,10 +26,15 @@ def fetch_and_store_news():
     for item in news_items:
         title = item.get('title')
         description = item.get('description')
-        tags = ', '.join(item.get('categories', []))
+        categories = item.get('categories', [])
         source = item.get('url')
 
-        News.objects.create(title=title, body=description,
-                            tags=tags, source=source)
+        # Create the News instance
+        news_instance = News.objects.create(
+            title=title, body=description, source=source)
+
+        # Get or create tags and assign them to the news instance
+        tags = [Tag.objects.get_or_create(name=tag)[0] for tag in categories]
+        news_instance.tags.set(tags)
 
     print(f"DONE. {len(news_items)} items have been added to the database")

@@ -2,6 +2,9 @@ from rest_framework import generics
 from .models import News
 from .serializer import NewsSerializer
 from django.shortcuts import render
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class NewsView(generics.ListAPIView):
@@ -34,10 +37,11 @@ class GetNewsByTagsView(generics.ListAPIView):
     queryset = News.objects.all()
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = News.objects.all()
         tags = self.request.query_params.get('tags', None)
+        logger.debug(f'Received tags query parameter: {tags}')
         if tags:
-            tags_list = tags.split(',')
-            for tag in tags_list:
-                queryset = queryset.filter(tags__icontains=tag)
-            return queryset
+            tags_list = [tag.strip() for tag in tags.split(',')]
+            queryset = queryset.filter(tags__name__in=tags_list).distinct()
+            logger.debug(f'Filtered queryset: {queryset.query}')
+        return queryset

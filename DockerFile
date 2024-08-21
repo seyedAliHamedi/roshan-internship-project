@@ -1,18 +1,12 @@
-FROM python:3.12
+FROM python:3.11-slim
 
-ENV PYTHONUNBUFFERED 1
-
-# Set the working directory in the container
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install  -r requirements.txt
+COPY . /app
 
-COPY . .
+RUN pip install -r requirements.txt
 
-# Run Django migrations and collect static files (optional, based on your setup)
-# RUN python manage.py migrate
-# RUN python manage.py collectstatic --noinput
+EXPOSE 8000
 
-# Start the Django application by default
+WORKDIR /app/technews
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "technews.wsgi:application"]
