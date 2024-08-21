@@ -1,0 +1,1 @@
+docker-compose run web python manage.py makemigrations docker-compose run web python manage.py migrate docker-compose run web python manage.py collectstatic docker-compose run web celery -A technews worker --loglevel=info docker-compose run web celery -A technews beat --loglevel=info

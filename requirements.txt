@@ -5,4 +5,5 @@ celery
 djangorestframework
 django_celery_beat
 psycopg2-binary
+flower
 gunicorn
