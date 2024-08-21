@@ -6,8 +6,7 @@ class NewsConfig(AppConfig):
     name = 'news'
 
     def ready(self):
-        # self.create_periodic_task()
-        pass
+        self.create_periodic_task()
 
     def create_periodic_task(self):
         from django_celery_beat.models import PeriodicTask, IntervalSchedule
