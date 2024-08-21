@@ -19,9 +19,8 @@ class NewsSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags', [])
         news = News.objects.create(**validated_data)
 
-        # Handle tags
-        for tag_name in tags_data:
-            tag, created = Tag.objects.get_or_create(name=tag_name)
+        for tag_data in tags_data:
+            tag, created = Tag.objects.get_or_create(name=tag_data['name'])
             news.tags.add(tag)
 
         return news
