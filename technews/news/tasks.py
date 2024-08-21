@@ -40,5 +40,4 @@ def fetch_and_store_news():
     if os.path.exists(os.path.join(spider_path, 'result.json')):
         os.remove(os.path.join(spider_path, 'result.json'))
 
-    print(f"------- DONE. {len(news_items)
-                           } items have been added to the database")
+    print(f"------- DONE. {len(news_items)} items have been added to the database")

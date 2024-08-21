@@ -13,12 +13,12 @@ class NewsConfig(AppConfig):
         from django.db.utils import OperationalError
         try:
             schedule, created = IntervalSchedule.objects.get_or_create(
-                every=1,
+                every=10,
                 period=IntervalSchedule.MINUTES,
             )
             PeriodicTask.objects.get_or_create(
                 interval=schedule,
-                name='Fetch and store news every minute',
+                name='Fetch and store news every 10 minute',
                 task='news.tasks.fetch_and_store_news',
             )
         except OperationalError:
